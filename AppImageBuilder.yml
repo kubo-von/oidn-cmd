@@ -1,0 +1,35 @@
+version: 1
+script:
+  - cargo build --release
+  # Remove any previous build
+  - rm -rf AppDir  | true
+  # Make dirs
+  - mkdir -p AppDir/usr/src
+  - mkdir -p AppDir/usr/lib
+  - mkdir -p AppDir/usr/bin
+  # Copy application code into the AppDir
+  - cp target/release/oidn-cmd AppDir/usr/bin -r
+  - cp include/oidn-2.2.2.x86_64.linux AppDir/usr/lib -r
+
+AppDir:
+  path: ./AppDir
+
+  app_info:
+    id: org.appimage-crafters.python-appimage-example
+    name: oidn-cmd
+    icon: utilities-terminal
+    version: 0.1.0
+    # Set the python executable as entry point
+    exec: usr/bin/oidn-cmd
+    # Set the application main script path as argument. Use '$@' to forward CLI parameters
+    exec_args: "$@"
+
+  runtime:
+    env:
+      OIDN_DIR: '${APPDIR}/usr/lib/oidn-2.2.2.x86_64.linux'
+      LD_LIBRARY_PATH: '${APPDIR}/usr/lib/oidn-2.2.2.x86_64.linux/lib'
+
+AppImage:
+  update-information: None
+  sign-key: None
+  arch: x86_64

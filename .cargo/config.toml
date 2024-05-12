@@ -1,0 +1,5 @@
+[env]
+OIDN_DIR={ value = "include/oidn-2.2.2.x86_64.linux", relative = true, force = true }
+LD_LIBRARY_PATH={ value = "include/oidn-2.2.2.x86_64.linux/lib", relative = true, force = true }
+[install]
+root = "appdir/bin"  

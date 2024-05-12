@@ -2,30 +2,38 @@ use hashbrown::HashMap;
 use exr::prelude::RgbaImage as rgb_exr;
 
 #[derive(Clone)]
+pub enum BufferType{
+    RGB,
+    RGBA,
+    Other
+}
+
+#[derive(Clone)]
 pub struct FloatImage{
     pub width: usize,
     pub height: usize,
-    pub rgba_buffers: HashMap<String, Vec<f32> >,
+    pub buffers: HashMap<String, (BufferType,Vec<f32>) >,
 }
 impl FloatImage{
-    pub fn new(width: usize, height: usize, buffers: HashMap<String, Vec<f32> >)->FloatImage{
+    pub fn new(width: usize, height: usize, buffers: HashMap<String, (BufferType,Vec<f32>) >)->FloatImage{
         FloatImage { 
             width: width, 
             height: height, 
-            rgba_buffers: buffers
+            buffers: buffers,
         }
     }
 
     pub fn from_exr(exr_path: String)->FloatImage{
         use exr::prelude::*;
         let path = exr_path.as_str();
-        let mut out_rgba_buffers: HashMap<String,Vec<f32> > = HashMap::new();
+        let mut out_buffers: HashMap<String, (BufferType,Vec<f32>) > = HashMap::new();
 
         let image = read()
         .no_deep_data().largest_resolution_level().all_channels().all_layers().all_attributes()
         .from_file(path).unwrap();
 
         let size =  image.layer_data[0].size;
+        println!("size: {:?}", size);
         let mut n_pixels = 0 as usize;
 
         for (layer_index, layer) in image.layer_data.iter().enumerate() {
@@ -48,40 +56,70 @@ impl FloatImage{
                     out_buffer.push(ch_data[pixel_index])
                 }
             }
+            
+            let buffer_type = match ( out_buffer.len()/(size.x()*size.y()) ){
+                3 => BufferType::RGB,
+                4 => BufferType::RGBA,
+                _ => BufferType::Other,
+            };
 
-
-            out_rgba_buffers.insert(layer_name.clone(),  out_buffer);
+            out_buffers.insert(layer_name.clone(),  (buffer_type, out_buffer) );
         }
 
         FloatImage{
             width: size.0,
             height: size.1,
-            rgba_buffers: out_rgba_buffers
+            buffers: out_buffers,
         }
     }
 
 
-    pub fn save_to_file(&self, out_file: String){
-        let rgba_buffer = self.rgba_buffers.get("main_layer").expect("couldn't find layer in multi_image");
-        let get_pixel = |x: usize, y: usize| {
+    pub fn save_to_file(&self, out_file: String,  out_layer: &String){
+        let ( layer_type, layer_data )= self.buffers.get(out_layer).expect("couldn't find layer in multi_image");
+        
+        let get_pixel_rgb = |x: usize, y: usize| {
             let pixel_i = x as usize + (y as usize * *&self.width as usize);
             (
-            rgba_buffer[pixel_i*4],
-            rgba_buffer[pixel_i*4+1],
-            rgba_buffer[pixel_i*4+2],
-            rgba_buffer[pixel_i*4+3]
+            layer_data[pixel_i*3],
+            layer_data[pixel_i*3+1],
+            layer_data[pixel_i*3+2],
+            )
+         };
+        
+        let get_pixel_rgba = |x: usize, y: usize| {
+            let pixel_i = x as usize + (y as usize * *&self.width as usize);
+            (
+            layer_data[pixel_i*4],
+            layer_data[pixel_i*4+1],
+            layer_data[pixel_i*4+2],
+            layer_data[pixel_i*4+3]
             )
          };
          
         // write a file without alpha and 32-bit float precision per channel
-        exr::prelude::write_rgba_file(
-            &out_file,
-            *&self.width as usize,
-            *&self.height as usize, // write an image with this resolution
-            |x,y| ( // generate an f32 rgb color for each of the  pixels
-                get_pixel(x,y)
-            )
-        ).unwrap();
+        match layer_type{
+            BufferType::RGB => {
+                exr::prelude::write_rgb_file(
+                    &out_file,
+                    *&self.width as usize,
+                    *&self.height as usize, // write an image with this resolution
+                    |x,y| ( // generate an f32 rgb color for each of the  pixels
+                        get_pixel_rgb(x,y)
+                    )
+                ).unwrap();
+            }
+            BufferType::RGBA => {
+                exr::prelude::write_rgba_file(
+                    &out_file,
+                    *&self.width as usize,
+                    *&self.height as usize, // write an image with this resolution
+                    |x,y| ( // generate an f32 rgb color for each of the  pixels
+                        get_pixel_rgba(x,y)
+                    )
+                ).unwrap();
+            }
+            _ => {}
+        }
     
         println!("created file {:?}", out_file);
 

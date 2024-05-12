@@ -26,11 +26,29 @@ fn main() {
                  .short('n')
                  .long("normal")
                  .help("a normal .exr file or sequence using the foo.####.exr pattern"))
+        .arg(Arg::new("layerbeauty")
+                 .short('e')
+                 .long("layerbeauty")
+                 .help("OPTIONAL - name of layer to denoise inside the beauty exr, defaults to main_layer"))
+        .arg(Arg::new("layeralbedo")
+                 .short('l')
+                 .long("layeralbedo")
+                 .help("OPTIONAL - name of layer to denoise inside the albedo exr, defaults to main_layer"))
+        .arg(Arg::new("layernormal")
+                 .short('o')
+                 .long("layernormal")
+                 .help("OPTIONAL - name of layer to denoise inside the normal exr, defaults to main_layer"))
         .get_matches();
 
     let beauty_path: &String = matches.get_one::<String>("beauty").expect("supply beauty exr file(s) using the -b flag");
     let albedo_path: Option<&String> = matches.get_one::<String>("albedo");
     let normal_path: Option<&String> = matches.get_one::<String>("normal");
+    
+    let default_layer_name = "main_layer".to_string();
+    
+    let beauty_layer: &String= matches.get_one::<String>("layerbeauty").unwrap_or(&default_layer_name );
+    let albedo_layer: &String= matches.get_one::<String>("layeralbedo").unwrap_or(&default_layer_name );
+    let normal_layer: &String= matches.get_one::<String>("layernormal").unwrap_or(&default_layer_name );
     
    let (beauty_seq, albedo_seq, normal_seq) ={
     
@@ -73,15 +91,15 @@ fn main() {
     };
     
     // sequence sanity check
-    if ( *&albedo_seq.is_some() || *&normal_seq.is_some() ){
-        if (&beauty_seq.clone().len() != &albedo_seq.clone().unwrap().len() || &beauty_seq.clone().len() != &normal_seq.clone().unwrap().len()){
+    if  *&albedo_seq.is_some() || *&normal_seq.is_some(){
+        if &beauty_seq.clone().len() != &albedo_seq.clone().unwrap().len() || &beauty_seq.clone().len() != &normal_seq.clone().unwrap().len(){
             panic!("sequences dont have the same frame count!")
         }
     }
     
-    println!("{:?}", &beauty_seq);
-    println!("{:?}", &albedo_seq);
-    println!("{:?}", &normal_seq);
+    //println!("{:?}", &beauty_seq);
+    //println!("{:?}", &albedo_seq);
+    //println!("{:?}", &normal_seq);
 
     // Denoise
     let device = oidn::Device::new();
@@ -97,7 +115,7 @@ fn main() {
         let albedo_data = match albedo_seq.clone(){
             Some(seq)=>{
                 let albedo_img = image::FloatImage::from_exr(seq[i].clone());
-                let albedo_data = albedo_img.rgba_buffers.get("main_layer").unwrap();
+                let (alebdo_type, albedo_data) = albedo_img.buffers.get(albedo_layer).expect(&format!("layer not found in albedo: {}", albedo_layer)[..]);
                 Some(albedo_data.clone())
             },
             None => {None}
@@ -106,14 +124,18 @@ fn main() {
         match normal_seq.clone(){
             Some(seq)=>{
                 let normal_img = image::FloatImage::from_exr(seq[i].clone());
-                let normal_data = normal_img.rgba_buffers.get("main_layer").unwrap();
-                denoiser.albedo_normal(&albedo_data.expect("Albedo data missing"), normal_data);
+                let (normal_type, normal_data) = normal_img.buffers.get(normal_layer).expect(&format!("layer not found in normal: {}", normal_layer)[..]);
+                denoiser.albedo_normal(&albedo_data.expect("Albedo data missing"), &normal_data);
             },
             None => {}
         };
         
-        let mut beauty_data = beauty_img.rgba_buffers.get("main_layer").unwrap().clone();
-        let (mut beauty_data_rgb, mut beauty_data_a ) = image::strip_alpha(beauty_data);
+        let (beauty_type,mut beauty_data) = beauty_img.buffers.get(beauty_layer).expect(&format!("layer not found in beauty: {}", beauty_layer)[..]).clone();
+        let (mut beauty_data_rgb, mut beauty_data_a ) = match beauty_type {
+            image::BufferType::RGBA => image::strip_alpha(beauty_data),
+            _ => (beauty_data,Vec::new()),
+        };
+        
         denoiser
             .filter_in_place(&mut beauty_data_rgb)
             .expect("Invalid input image dimensions?");
@@ -122,12 +144,15 @@ fn main() {
             println!("Error denosing image: {}", e.1);
         }
 
-        let beauty_data_denoised = image::add_alpha(beauty_data_rgb, beauty_data_a);
+        let beauty_data_denoised = match beauty_type {
+            image::BufferType::RGBA => image::add_alpha(beauty_data_rgb, beauty_data_a),
+            _ => beauty_data_rgb,
+            };
         
-        beauty_img.rgba_buffers.insert("main_layer".to_string(), beauty_data_denoised);
+        beauty_img.buffers.insert(beauty_layer.clone(), (beauty_type, beauty_data_denoised) );
         
         let out_file_path = beauty_file_path.replace(".exr", "_denoised.exr");
-        beauty_img.save_to_file(out_file_path);
+        beauty_img.save_to_file(out_file_path, beauty_layer);
     }
 
 }
@@ -136,7 +161,7 @@ fn gather_file_sequence(path: String)->Vec<String>{
     let hashes_location = (path.find("#").unwrap(), path.rfind("#").unwrap());
     let hashes: String = (0..(hashes_location.1-hashes_location.0+1)).map(|i|{"#".to_string()}).collect::<Vec<String>>().join(""); // e.g ####
     let glob_pat: String = (0..(hashes_location.1-hashes_location.0+1)).map(|i|{"?".to_string()}).collect::<Vec<String>>().join(""); // e.g. ????
-    println!("{:?}",hashes);
+    //println!("{:?}",hashes);
     
     let mut out: Vec<String> = Vec::new();
     for entry in glob((path.replace(hashes.as_str(), glob_pat.as_str())).as_str()).expect("Failed to read glob pattern") {
