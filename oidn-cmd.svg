@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg" xmlns:bx="https://boxy-svg.com">
+  <rect style="stroke-linejoin: round; stroke-width: 22px; fill: rgb(63, 63, 63); stroke: rgb(255, 255, 255);" x="16.57" y="17.151" width="465.28" height="465.28" rx="50" ry="50"/>
+  <path d="M 327.316 120.24 L 468.011 400.313 L 186.62 400.313 L 327.316 120.24 Z" style="fill: rgb(216, 216, 216);" bx:shape="triangle 186.62 120.24 281.391 280.073 0.5 0 1@051231e0"/>
+  <path d="M 194.528 217.112 L 335.223 400.313 L 53.832 400.313 L 194.528 217.112 Z" style="fill: rgb(216, 216, 216);" bx:shape="triangle 53.832 217.112 281.391 183.201 0.5 0 1@1a008b3a"/>
+  <rect style="stroke-linejoin: round; stroke-width: 22px; fill: rgb(63, 63, 63);" x="29.62" y="313.851" width="438.391" height="125.485"/>
+  <ellipse style="fill: rgb(216, 216, 216);" cx="226.819" cy="146.599" rx="40.199" ry="40.199"/>
+  <ellipse style="fill: rgb(216, 216, 216);" cx="295.628" cy="315.749" rx="12.112" ry="12.112"/>
+  <ellipse style="fill: rgb(216, 216, 216);" cx="206.458" cy="312.749" rx="12.112" ry="12.112"/>
+  <ellipse style="fill: rgb(216, 216, 216);" cx="154.973" cy="315.749" rx="12.112" ry="12.112"/>
+  <ellipse style="fill: rgb(216, 216, 216);" cx="164.156" cy="363.977" rx="12.112" ry="12.112"/>
+  <ellipse style="fill: rgb(216, 216, 216);" cx="113.689" cy="325.963" rx="12.112" ry="12.112"/>
+  <ellipse style="fill: rgb(216, 216, 216);" cx="130.749" cy="357.577" rx="12.112" ry="12.112"/>
+  <ellipse style="fill: rgb(216, 216, 216);" cx="89.465" cy="364.197" rx="12.112" ry="12.112"/>
+  <ellipse style="fill: rgb(216, 216, 216);" cx="65.944" cy="398.635" rx="12.112" ry="12.112"/>
+  <ellipse style="fill: rgb(216, 216, 216);" cx="113.689" cy="398.635" rx="12.112" ry="12.112"/>
+  <ellipse style="fill: rgb(216, 216, 216);" cx="198.732" cy="388.201" rx="12.112" ry="12.112"/>
+  <ellipse style="fill: rgb(216, 216, 216);" cx="230.682" cy="350.187" rx="12.112" ry="12.112"/>
+  <ellipse style="fill: rgb(216, 216, 216);" cx="239.481" cy="398.635" rx="12.112" ry="12.112"/>
+  <ellipse style="fill: rgb(216, 216, 216);" cx="263.705" cy="372.575" rx="12.112" ry="12.112"/>
+  <ellipse style="fill: rgb(216, 216, 216);" cx="339.197" cy="395.421" rx="12.112" ry="12.112"/>
+  <ellipse style="fill: rgb(216, 216, 216);" cx="455.899" cy="399.201" rx="12.112" ry="12.112"/>
+  <ellipse style="fill: rgb(216, 216, 216);" cx="313.632" cy="363.977" rx="12.112" ry="12.112"/>
+  <ellipse style="fill: rgb(216, 216, 216);" cx="409.741" cy="312.749" rx="12.112" ry="12.112"/>
+  <ellipse style="fill: rgb(216, 216, 216);" cx="247.18" cy="315.749" rx="12.112" ry="12.112"/>
+  <ellipse style="fill: rgb(216, 216, 216);" cx="190.38" cy="340.973" rx="12.112" ry="12.112"/>
+  <ellipse style="fill: rgb(216, 216, 216);" cx="289.408" cy="398.635" rx="12.112" ry="12.112"/>
+  <ellipse style="fill: rgb(216, 216, 216);" cx="347.335" cy="315.749" rx="12.112" ry="12.112"/>
+  <ellipse style="fill: rgb(216, 216, 216);" cx="386.304" cy="348.351" rx="12.112" ry="12.112"/>
+  <ellipse style="fill: rgb(216, 216, 216);" cx="440.501" cy="348.187" rx="12.112" ry="12.112"/>
+  <ellipse style="fill: rgb(216, 216, 216);" cx="406.528" cy="398.635" rx="12.112" ry="12.112"/>
+  <ellipse style="fill: rgb(216, 216, 216);" cx="374.286" cy="382.411" rx="12.112" ry="12.112"/>
+  <ellipse style="fill: rgb(216, 216, 216);" cx="347.335" cy="350.187" rx="12.112" ry="12.112"/>
+  <ellipse style="fill: rgb(216, 216, 216);" cx="154.973" cy="398.635" rx="12.112" ry="12.112"/>
+  <line style="fill: rgb(216, 216, 216); stroke-width: 12px; stroke: rgb(255, 255, 255);" x1="17.454" y1="312.753" x2="481.85" y2="313.851"/>
+  <ellipse style="fill: rgb(216, 216, 216);" cx="283.929" cy="344.973" rx="12.112" ry="12.112"/>
+  <ellipse style="fill: rgb(216, 216, 216);" cx="414.277" cy="367.197" rx="12.112" ry="12.112"/>
+</svg>

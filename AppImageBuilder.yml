@@ -15,7 +15,7 @@ AppDir:
   path: ./AppDir
 
   app_info:
-    id: org.appimage-crafters.python-appimage-example
+    id: org.appimage-crafters.oidn-cmd
     name: oidn-cmd
     icon: utilities-terminal
     version: 0.1.0
