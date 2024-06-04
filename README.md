@@ -21,7 +21,7 @@
   -V, --version                    Print version
 ```
 ## Running the .appimage
-- Download and make it executable
+- download and make it executable
 - run via commandline:
 
 ```bash
@@ -31,7 +31,7 @@
 ## Running & building via cargo
 - clone
 - download and extract OIDN into *include/oidn-2.2.2.x86_64.linux/*
-- build/ run:
+- build / run:
 
 ```bash
 cargo run --release -- -b tests/beauty.####.exr -a tests/denoising_albedo.####.exr -n tests/denoising_normal.####.exr
@@ -42,6 +42,10 @@ cargo run --release -- -b tests/beauty.####.exr -a tests/denoising_albedo.####.e
 - download the  [appimage-builder](https://github.com/AppImageCrafters/appimage-builder/releases) and make it exectuable, I also tend to remove the .AppImage in the file name.
 - you can put it to e.g. /home/your-user/.local/bin/ to have it available everywhere.
 - cd into oidn-cmd directory and run *appimage-builder*
+
+## Acknowledgements
+- Will Usher - creator of [oidn-rs](https://github.com/Twinklebear/oidn-rs) crate
+- Johannes Vollmer - creator of [exrs](https://github.com/johannesvollmer/exrs) crate
 
 ## License
 This repository is licensed under MIT license. 
