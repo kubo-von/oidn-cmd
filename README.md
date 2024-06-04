@@ -1,12 +1,12 @@
 # oidn-cmd
 ![Screenshot](screenshot.png)
 
-- Is a aiming to be a simple command line utility for denosiing **.exr** sequences using **Intel Open Image Denoiser**.
+- Is aiming to be a simple command line utility for denosiing **.exr** sequences using [**Intel Open Image Denoise**](https://www.openimagedenoise.org/).
 - For Linux appimage is provided, which should work out of the box.
 - For Windows and MacOS building should via cargo *should* work, but I did not test it yet.
 
 ## Limitations
-- The denosied .exr file contains only the denoised layer, other layers from the original file are stripped.
+- The denoised .exr file contains only the denoised layer, other layers from the original file are stripped.
 
 ## Arguments
 ```bash
