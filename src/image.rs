@@ -1,7 +1,7 @@
 use exr::prelude::RgbaImage as rgb_exr;
 use hashbrown::HashMap;
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub enum BufferType {
     RGB,
     RGBA,
@@ -156,7 +156,7 @@ pub fn strip_alpha(rgba_data: Vec<f32>) -> (Vec<f32>, Vec<f32>) {
         rgb_data.push(rgba[0]);
         rgb_data.push(rgba[1]);
         rgb_data.push(rgba[2]);
-        a_data.push(rgba[2]);
+        a_data.push(rgba[3]);
     }
 
     (rgb_data, a_data)

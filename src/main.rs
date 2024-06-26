@@ -180,6 +180,8 @@ fn main() {
             _ => (beauty_data, Vec::new()),
         };
 
+        println!("beauty type: {:?}", beauty_type);
+
         denoiser
             .filter_in_place(&mut beauty_data_rgb)
             .expect("Invalid input image dimensions?");
